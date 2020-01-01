@@ -1,0 +1,68 @@
+@import "~antd/lib/style/themes/default.less";
+
+.setting {
+  background-color: #fff;
+  text-align: center;
+
+  :global {
+    /*.ant-form-item{
+        margin-bottom: 16px;
+    }*/
+    .ant-form-explain {
+      text-align: left;
+    }
+  }
+
+  .mainBody {
+    width: 50%;
+    margin: auto;
+    position: relative;
+  }
+
+  .avatar {
+    padding: 20px;
+    .mark {
+      position: relative;
+      height: 45px;
+      background-color: rgba(0, 0, 0, 0.5);
+      bottom: 45px;
+      font-weight: bold;
+      border-bottom-right-radius: 4em;
+      border-bottom-left-radius: 4em;
+      padding-top: 10px;
+      display: none;
+
+      :global {
+        .ant-upload.ant-upload-select-picture-card {
+          border: 0;
+          width: unset;
+          height: unset;
+          border-radius: unset;
+          background-color: unset;
+          transition: unset;
+          margin: unset;
+          display: unset;
+        }
+        .ant-upload.ant-upload-select-picture-card > .ant-upload {
+          width: unset;
+          height: unset;
+          display: unset;
+          padding: unset;
+          color: white;
+        }
+      }
+    }
+  }
+
+  .leftText {
+    text-align: right;
+    padding: 5px 0 10px 0;
+    color: #000;
+  }
+
+  .rightText {
+    text-align: left;
+    padding: 5px 0 10px 8px;
+    color: #000;
+  }
+}

@@ -1,0 +1,31 @@
+@import '~antd/lib/style/themes/default.less';
+
+.ListOpEdit {
+  color: blue;
+  cursor: pointer;
+}
+
+.ListOpDisable {
+  color: red;
+  cursor: pointer;
+}
+
+.ListOpEnable {
+  color: green;
+  cursor: pointer;
+}
+
+.ListOpRef {
+  color: brown;
+  cursor: pointer;
+}
+
+:global {
+  #diff_content {
+    table[rules="groups"]{
+      th, td {
+        max-width: 340px;
+      }
+    }
+  }
+}
