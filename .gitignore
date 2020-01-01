@@ -2,3 +2,7 @@
 .idea/
 __pycache__/
 backend/__pycache__/
+backend/exam_standard/normalization_processor/data/loinc_tree.json
+backend/exam_standard/normalization_processor/data/radlex_tree.json
+backend/exam_standard/normalization_processor/data/kidney_tree.json
+
