@@ -1,0 +1,25 @@
+{
+  "supported_loinc_classes": {
+    "放射医学检查": {
+      "currently_used_plan": "A",
+      "plans": {
+        "A": "radlex"
+      }
+    },
+
+    "刺激耐受类检测": {
+      "currently_used_plan": "A",
+      "plans": {
+        "A": "kidney"
+      }
+    },
+
+    "凝血功能试验类": {
+      "currently_used_plan": "A",
+      "plans": {
+        "A": "kidney"
+      }
+    }
+
+  }
+}
