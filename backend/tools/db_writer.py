@@ -5,8 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 import sys
 sys.path.insert(0, "/users/hk/dev/ExamStandard/backend")
 
-from db_models.db_models import ReportTaggingSamples, Kidney
-from exam_standard.exam_standard_processor.utils import load_json_file
+from db_models.db_models import ReportTaggingSamples, Kidney, Loinc
 
 
 class DatabaseWriter(object):
@@ -18,7 +17,7 @@ class DatabaseWriter(object):
     """
     def __init__(self, abs_data_path):
         self.abs_data_path = abs_data_path
-        self.data = []
+        self.data = None
 
         self.app = None
         self.db = None
@@ -32,8 +31,36 @@ class DatabaseWriter(object):
         }
         return
 
-    def _load_data(self):
-        pass
+    def _load_data(self, data_type):
+        """
+        1 many_json是指 goldset.json 一样, 有很多行json;
+        2 single_json是指像 loinc_tree.json 一样, 是一个标准的json格式文件
+        """
+        def __load_many_json(abs_data_path):
+            data = []
+            with open(abs_data_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    try:
+                        data.append(json.loads(line))
+                    except Exception as e:
+                        print('error line: {}'.format(line))
+            return data
+
+        def __load_single_json(abs_data_path):
+            try:
+                with open(abs_data_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+            except Exception as e:
+                data = None
+                print("load single json failed. %s" % str(e))
+            return data
+
+        type_func_map = {
+            "many_json": __load_many_json,
+            "single_json": __load_single_json
+        }
+        self.data = type_func_map[data_type](self.abs_data_path)
+        return
 
     def init_db(self):
         self.app = Flask(__name__)
@@ -59,19 +86,11 @@ class ReportTaggingSamplesWriter(DatabaseWriter):
         self.init_db()
         return
 
-    def _load_data(self):
-        with open(self.abs_data_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                try:
-                    self.data.append(json.loads(line))
-                except Exception as e:
-                    print('error line: {}'.format(line))
-        return
-
     def write(self):
-        self._load_data()
+        self._load_data(data_type="many_json")
 
         for one in self.data:
+            # 空行不写入, 只写入有效数据
             if len(one["input"]["diagnostic_result_text"]) > 0 and \
                     len(one["diagnostic_result_target"]) > 0 and \
                     len(one["input"]["light_microscopy_text"]) > 0 and \
@@ -107,11 +126,6 @@ class KidneyTreeWriter(DatabaseWriter):
         DatabaseWriter.__init__(self, abs_data_path)
         self.init_db()
 
-    def _load_data(self):
-        with open(self.abs_data_path, "r", encoding="utf-8") as f:
-            self.data = json.load(f)
-        return
-
     def write(self):
         """
         1 dfs 深度优先搜索, 将有层级结构的 kidney_tree, 平铺到 flat_tree 中.
@@ -140,9 +154,8 @@ class KidneyTreeWriter(DatabaseWriter):
                         queue.append(c)
             return res
 
-        self._load_data()
+        self._load_data(data_type="single_json")
         flat_tree = __dfs(start_node=self.data)
-
         # 2
         today_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         try:
@@ -179,6 +192,55 @@ class KidneyTreeWriter(DatabaseWriter):
         return
 
 
+class LoincTreeWriter(DatabaseWriter):
+    """将 Locin_tree.json 写入 loinc 数据表"""
+    def __init__(self, abs_data_path):
+        DatabaseWriter.__init__(self, abs_data_path)
+        self.init_db()
+        return
+
+    def write(self):
+        """self.data 是一个 dict 类型的数据
+        one = {'CLASS': "身高.原子型",
+               "COMPONENT": "身高方法",
+               "LOINC_NUM": "83844-1",
+               "METHOD_TYPE": "定量型",
+               "PROPERTY": "长度",
+               "SCALE_TYPE": "名义型",
+               "SYSTEM": "^父亲",
+               "TIME_ASPECT": "时间点"}
+        """
+        self._load_data(data_type="single_json")
+        if self.data is None:
+            return
+
+        today_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        for sc_k, sc_v in self.data.items():
+            for class_k, class_v in sc_v.items():
+                for sys_k, sys_v in class_v.items():
+                    for one in sys_v:
+                        try:
+                            record = Loinc(
+                                class_x=one["CLASS"],
+                                component=one["COMPONENT"],
+                                loinc_number=one["LOINC_NUM"],
+                                method_typ=one["METHOD_TYP"],
+                                property=one["PROPERTY"],
+                                scale_typ=one["SCALE_TYP"],
+                                system=one["SYSTEM"],
+                                time_aspect=one["TIME_ASPECT"],
+                                created_at=today_str,
+                                created_by=1,
+                                updated_at=today_str,
+                                updated_by=1
+                            )
+                            self.db.session.add(record)
+                            self.db.session.commit()
+                        except Exception as e:
+                            print("写入失败:%s\n%s" % (str(e), one))
+        return
+
+
 def main():
     base_path = "/users/hk/dev/ExamStandard/backend/"
     path_map = {
@@ -189,6 +251,10 @@ def main():
         "kidney": {
             "path": "exam_standard/normalization_processor/data/",
             "name": "kidney_tree.json"
+        },
+        "loinc": {
+            "path": "exam_standard/normalization_processor/data/",
+            "name": "loinc_tree.json"
         }
     }
 
@@ -196,13 +262,19 @@ def main():
     report_writer = ReportTaggingSamplesWriter(
         base_path + path_map["report_tagging_samples"]["path"] + path_map["report_tagging_samples"]["name"]
     )
-    report_writer.write()
+    # report_writer.write()
 
     # 2 kidney tree
     kidney_writer = KidneyTreeWriter(
         base_path + path_map["kidney"]["path"] + path_map["kidney"]["name"]
     )
-    kidney_writer.write()
+    # kidney_writer.write()
+
+    # 3 Loinc tree
+    loinc_writer = LoincTreeWriter(
+        base_path + path_map["loinc"]["path"] + path_map["loinc"]["name"]
+    )
+    loinc_writer.write()
 
 
 if __name__ == '__main__':

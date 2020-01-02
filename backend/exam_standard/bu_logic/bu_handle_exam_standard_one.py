@@ -74,9 +74,7 @@ def build_targets_by_tagging_model(global_var, text):
 
 def build_targets_by_manual(raw_exam_report, text):
     """由于模型还需要优化, 暂时先用已经存储在数据库中的 人工标注 的数据"""
-    # text = raw_exam_report["content"]
-    raw_target = json.loads(raw_exam_report["content_tag"])
-    target = raw_target["entity"]
+    target = json.loads(raw_exam_report["content_tag"])
 
     res = []
     for i in target:

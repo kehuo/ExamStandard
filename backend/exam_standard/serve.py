@@ -28,6 +28,7 @@ class LogIn(Resource):
         parser.add_argument('password', type=str, required=True, location='json')
         args = parser.parse_args()
         rst = LoginUtils.login(global_var['db'], args)
+
         access_token = create_access_token(identity=args['userName'])
         resp = Response(json.dumps(rst, ensure_ascii=False), content_type="application/json; charset=utf-8")
         resp.set_cookie('_op_token_dv', access_token)
@@ -74,6 +75,7 @@ class ExamStandardList(Resource):
     获取数据库中所有 检查报告初始文本 的列表 (对应前端 exam-standard/show-exam-report-list 页面)
     """
 
+    @check_permission([1, 2, 3, 4])
     def get(self, **auth):
         parser = reqparse.RequestParser()
         parser.add_argument('page', type=int, required=False, location='args')
