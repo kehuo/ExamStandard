@@ -32,7 +32,9 @@ class ReportTaggingSamples(Base):
     content_tag = Column(Text, nullable=False)
     type = Column(String(11), nullable=True, default="")
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+    created_by = Column(Integer, nullable=False)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_by = Column(Integer, nullable=False)
 
 
 class RamdisCases(Base):
@@ -66,7 +68,9 @@ class Radlex(Base):
     parent_id = Column(Integer, nullable=True)
     parent_rid = Column(String(64), nullable=True)
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+    created_by = Column(Integer, nullable=False, default=0)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_by = Column(Integer, nullable=False, default=0)
 
 
 class Loinc(Base):
@@ -81,7 +85,9 @@ class Loinc(Base):
     system = Column(String(256), nullable=True, default="")
     time_aspect = Column(String(256), nullable=True, default="")
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+    created_by = Column(Integer, nullable=False, default=0)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_by = Column(Integer, nullable=False, default=0)
 
 
 class LoincObjMapping(Base):
@@ -90,7 +96,9 @@ class LoincObjMapping(Base):
     src = Column(String(256), nullable=True, default="")
     dst = Column(String(256), nullable=True, default="")
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+    created_by = Column(Integer, nullable=False, default=0)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_by = Column(Integer, nullable=False, default=0)
 
 
 class LoincStep0Mapping(Base):
@@ -99,7 +107,9 @@ class LoincStep0Mapping(Base):
     src = Column(String(256), nullable=True, default="")
     dst = Column(String(256), nullable=True, default="")
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+    created_by = Column(Integer, nullable=False, default=0)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_by = Column(Integer, nullable=False, default=0)
 
 
 class RadlexNameMapping(Base):
@@ -109,7 +119,9 @@ class RadlexNameMapping(Base):
     src = Column(String(256), nullable=True, default="")
     dst = Column(String(256), nullable=True, default="")
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+    created_by = Column(Integer, nullable=False, default=0)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_by = Column(Integer, nullable=False, default=0)
 
 
 class FMAEntity(Base):
@@ -121,7 +133,9 @@ class FMAEntity(Base):
     parent_id = Column(Integer, nullable=True)
     parent_code = Column(String(64), nullable=True)
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+    created_by = Column(Integer, nullable=False, default=0)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_by = Column(Integer, nullable=False, default=0)
 
 
 class SnomedCtEntity(Base):
@@ -132,7 +146,9 @@ class SnomedCtEntity(Base):
     cn_name = Column(String(256), nullable=True, default="")
     is_leaf = Column(Integer, nullable=True)
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+    created_by = Column(Integer, nullable=False, default=0)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_by = Column(Integer, nullable=False, default=0)
 
 
 class SnomedCtEntityRelationship(Base):
@@ -144,7 +160,9 @@ class SnomedCtEntityRelationship(Base):
     characteristic_type = Column(String(64), nullable=False)
     type_code = Column(String(64), nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+    created_by = Column(Integer, nullable=False, default=0)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_by = Column(Integer, nullable=False, default=0)
 
 
 class SnomedCtEntitySynonym(Base):
@@ -154,7 +172,9 @@ class SnomedCtEntitySynonym(Base):
     text = Column(String(256), nullable=False)
     cn_text = Column(String(256), nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+    created_by = Column(Integer, nullable=False, default=0)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_by = Column(Integer, nullable=False, default=0)
 
 
 class Kidney(Base):
@@ -166,7 +186,9 @@ class Kidney(Base):
     parent_id = Column(Integer, nullable=True)
     parent_kid = Column(String(64), nullable=True)
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+    created_by = Column(Integer, nullable=False, default=0)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_by = Column(Integer, nullable=False, default=0)
 
 
 class KidneyNameMapping(Base):
@@ -176,4 +198,6 @@ class KidneyNameMapping(Base):
     src = Column(String(256), nullable=True, default="")
     dst = Column(String(256), nullable=True, default="")
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+    created_by = Column(Integer, nullable=False, default=0)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_by = Column(Integer, nullable=False, default=0)

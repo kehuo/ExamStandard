@@ -177,15 +177,15 @@ CREATE TABLE `snomed_ct_entity` (
 DROP TABLE IF EXISTS `kidney`;
 CREATE TABLE `kidney` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `kid` varchar(64) NOT NULL DEFAULT '' COMMENT 'radlex编码',
+  `kid` varchar(64) NOT NULL DEFAULT '' COMMENT 'kidney编码',
   `en_name` varchar(256) NOT NULL DEFAULT '' COMMENT '英文名',
   `cn_name` varchar(256) NOT NULL DEFAULT '' COMMENT '中文名',
   `parent_id` int(11) DEFAULT NULL,
-  `parent_rid` varchar(64) NOT NULL DEFAULT '',
+  `parent_kid` varchar(64) NOT NULL DEFAULT '',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `created_by` int(11) NOT NULL DEFAULT '0',
+  `created_by` int(11) NOT NULL DEFAULT 0,
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_by` int(11) NOT NULL DEFAULT '0',
+  `updated_by` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_kid` (`kid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

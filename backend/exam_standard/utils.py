@@ -6,10 +6,10 @@ from app.init_global import global_var
 
 
 def encrypt_password(password):
-    myMd5 = hashlib.md5()
-    myMd5.update(password.encode('utf-8'))
-    myMd5_Digest = myMd5.hexdigest()
-    return myMd5_Digest
+    my_md5 = hashlib.md5()
+    my_md5.update(password.encode('utf-8'))
+    my_md5_digest = my_md5.hexdigest()
+    return my_md5_digest
 
 
 def check_permission(user_roles):

@@ -5,6 +5,7 @@ backend/__pycache__/
 backend/exam_standard/normalization_processor/data/loinc_tree.json
 backend/exam_standard/normalization_processor/data/radlex_tree.json
 backend/exam_standard/normalization_processor/data/kidney_tree.json
+backend/db_models/__pycache__/
 
 frontend/.temp/
 frontend/node_modules/
