@@ -1,0 +1,46 @@
+# pipeline依赖的docker镜像
+image: docker-reg.basebit.me:5000/base/centos7_pyenv
+variables:
+  IMAGE_NAME: exam_standard_backend
+  PRODUCTION_VERSION: 1.0.0
+  FRONTEND_IMAGE_NAME: exam_standard_frontend
+  FRONTEND_PRODUCTION_VERSION: 1.0.0
+
+# 所有stage之前的操作
+before_script:
+ - whoami
+ - echo "I am in before_script"
+# 所有stage之后的操作
+after_script:
+ - echo "I am in after_script"
+# 本次pipeline的stages
+stages:
+ - production
+# 部署生成环境镜像
+# cd到的路径，就是gitlab中项目根目录的路径下的服务的目录名
+# 比如要部署backend服务, 那么cd到backend即可
+deploy_service:
+   image: docker-reg.basebit.me:5000/base/docker:latest
+   stage: production
+   only:
+    - dev
+   script:
+    - cd backend
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ./id_rsa
+    - docker build -f Dockerfile -t docker-reg.basebit.me:5000/service/"${IMAGE_NAME}":"${PRODUCTION_VERSION}" .
+    - docker push docker-reg.basebit.me:5000/service/"${IMAGE_NAME}":"${PRODUCTION_VERSION}"
+   # 定义job运行时机
+   when: manual
+
+deploy_frontend:
+    image: docker-reg.basebit.me:5000/base/docker:latest
+    stage: production
+    only:
+      - dev
+    script:
+      - cd frontend
+      - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ./id_rsa
+      - docker build -f Dockerfile -t docker-reg.basebit.me:5000/service/"${FRONTEND_IMAGE_NAME}":"${FRONTEND_PRODUCTION_VERSION}" .
+      - docker push docker-reg.basebit.me:5000/service/"${FRONTEND_IMAGE_NAME}":"${FRONTEND_PRODUCTION_VERSION}"
+    # 定义job运行时机
+    when: manual
