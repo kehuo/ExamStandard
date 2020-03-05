@@ -8,6 +8,7 @@ backend/exam_standard/normalization_processor/data/kidney_tree.json
 backend/db_models/__pycache__/
 exam_standard/bu_logic/__pycache__/
 backend/exam_standard/exam_standard_processor/logic/__pycache__/
+backend/demo/__pycache__/
 
 frontend/.temp/
 frontend/node_modules/
